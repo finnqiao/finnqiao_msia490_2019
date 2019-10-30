@@ -7,6 +7,7 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.stem import PorterStemmer
+import csv
 
 df = pd.read_csv('/Users/finn/Downloads/amazon-fine-food-reviews/Reviews.csv')
 
@@ -53,8 +54,12 @@ df['cleaned_text_bigrams'] = df.apply(lambda x: x['cleaned_text'] + list(map(lam
 
 df[['cleaned_text', 'cleaned_text_bigrams','label']].to_csv('preprocessed_text_with_bigrams.csv', index=False)
 
-mydict = gensim.corpora.Dictionary(df['cleaned_text'])
+# create data for fasttext
 
-tfidf_model = gensim.models.TfidfModel(dictionary=mydict)
+df['fasttext_label'] = ['__label__' + str(score) for score in df['label']]
 
-tfidf_model
+# remove any new lines
+
+df['fasttext_text'] = df['Text'].replace('\n',' ', regex=True).replace('\t',' ', regex=True)
+
+df[['fasttext_label','fasttext_text']].to_csv('fasttext_reviews.txt', index=False, sep=' ', header=False, quoting=csv.QUOTE_NONE, quotechar="", escapechar=" ")
