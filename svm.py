@@ -57,7 +57,7 @@ print(classification_report(y_bi_test, y_bi_pred,target_names=scores))
 
 svm2 = Pipeline([('vect', CountVectorizer()),
                 ('tfidf', TfidfTransformer()),
-                ('clf', LinearSVC(solver='squared_hinge', C=0.5)),
+                ('clf', LinearSVC(loss='squared_hinge', C=0.5)),
                ])
 svm2.fit(X_train, y_train)
 
@@ -70,7 +70,7 @@ print(classification_report(y_test, y_pred,target_names=scores))
 
 svm2 = Pipeline([('vect', CountVectorizer()),
                 ('tfidf', TfidfTransformer()),
-                ('clf', LinearSVC(solver='squared_hinge', C=0.5)),
+                ('clf', LinearSVC(loss='squared_hinge', C=0.5)),
                ])
 svm2.fit(X_train, y_train)
 
@@ -80,3 +80,7 @@ y_bi_pred = svm2.predict(X_bi_test)
 
 print('accuracy %s' % accuracy_score(y_bi_pred, y_bi_test))
 print(classification_report(y_bi_test, y_bi_pred,target_names=scores))
+
+import pickle
+
+pickle.dump(svm, open('svm_model.pkl', 'wb'))
